@@ -82,15 +82,12 @@ const ListItem = React.forwardRef(
 
     // Delay to show the progress bar
     const [showProgress, setShowProgress] = React.useState(false);
-    const progressRafRef = React.useRef<NodeJS.Timer | null>(null);
     React.useEffect(() => {
-      progressRafRef.current = setTimeout(() => {
+      const timer = setTimeout(() => {
         setShowProgress(true);
       }, 300);
       return () => {
-        if (progressRafRef.current) {
-          clearTimeout(progressRafRef.current);
-        }
+        clearTimeout(timer);
       };
     }, []);
 
@@ -247,7 +244,13 @@ const ListItem = React.forwardRef(
               // show loading icon if upload progress listener is disabled
               const loadingProgress =
                 'percent' in file ? (
-                  <Progress {...progressProps} type="line" percent={file.percent} />
+                  <Progress
+                    {...progressProps}
+                    type="line"
+                    percent={file.percent}
+                    aria-label={file['aria-label']}
+                    aria-labelledby={file['aria-labelledby']}
+                  />
                 ) : null;
 
               return (
